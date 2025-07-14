@@ -51,7 +51,7 @@ body {
 /* Überschneidungen zentriert */
 .ueberschneidungen-box {
     position: absolute;
-    top: 410px;
+    top: 450px;
     left: 50%;
     transform: translateX(-50%);
     width: 800px;
