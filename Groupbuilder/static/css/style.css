@@ -38,7 +38,7 @@ body {
 .eintraege-box {
     position: absolute;
     top: 200px;
-    right: 20px;
+    right: 25px;
     width: 260px;
     max-height: 700px;
     background-color: rgba(20, 20, 20, 0.85);
