@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Login – Die Verlassenen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="form-box login-position">
+        <h1>Login</h1>
+        <form method="POST" action="/login">
+            <input name="username" placeholder="Benutzername" required>
+            <input name="password" type="password" placeholder="Passwort" required>
+            <button type="submit">Einloggen</button>
+        </form>
+        <a href="/register">Noch kein Account?</a>
+    </div>
+</body>
+</html>

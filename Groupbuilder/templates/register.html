@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrieren – Die Verlassenen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="form-box login-position">
+        <h1>Registrieren</h1>
+        <form method="POST" action="/register">
+            <input name="username" placeholder="Benutzername" required>
+            <input name="password" type="password" placeholder="Passwort" required>
+            <button type="submit">Registrieren</button>
+        </form>
+        <a href="/login">Zurück zum Login</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Die Verlassenen – Gruppenplaner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1 class="main-title">Die Verlassenen – Gruppenplaner</h1>
+
+    <!-- Eintragen-Fenster -->
+    <div class="form-box eintragen-box">
+        <!-- Charakter hinzufügen -->
+        <form method="POST" action="/add_character">
+            <input name="char_name" placeholder="Neuer Charaktername" required>
+            <button type="submit">Charakter hinzufügen</button>
+        </form>
+
+        <!-- Zeiteintrag -->
+        <form method="POST" action="/submit" id="entry-form">
+            <label>Wochentage:</label>
+            <div class="weekday-box">
+                {% for d in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %}
+                    <label><input type="checkbox" name="days" value="{{ d }}"> {{ d }}</label>
+                {% endfor %}
+            </div>
+
+            <input type="time" name="start_time" required>
+            <input type="time" name="end_time" required>
+
+            <select name="character_id" required>
+                <option value="">Charakter auswählen</option>
+                {% for char in characters %}
+                    <option value="{{ char['id'] }}">{{ char['char_name'] }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="spec" required>
+                <option value="">Spec</option>
+                <option>Tank</option>
+                <option>Heiler</option>
+                <option>DD</option>
+            </select>
+
+            <select name="keystone" required>
+                <option value="">Keystufe</option>
+                {% for i in range(2, 21) %}
+                    <option>+{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Speichern</button>
+        </form>
+
+        <a href="/logout">Logout</a>
+        <form method="POST" action="/delete_account" onsubmit="return confirm('Account wirklich löschen?');">
+            <button type="submit" class="delete-btn">Account löschen</button>
+        </form>
+    </div>
+
+    <!-- Überschneidungen -->
+    <div class="center-box ueberschneidungen-box">
+        <h2>Überschneidungen</h2>
+        <div class="scroll-area">
+            {% if matches %}
+            <table class="sortable-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Tag</th>
+                        <th onclick="sortTable(1)">Start</th>
+                        <th onclick="sortTable(2)">Ende</th>
+                        <th onclick="sortTable(3)">Spieler</th>
+                        <th onclick="sortTable(4)">Charakter</th>
+                        <th onclick="sortTable(5)">Spec</th>
+                        <th onclick="sortTable(6)">Key</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in matches %}
+                    <tr>
+                        <td>{{ m['day'] }}</td>
+                        <td>{{ m['start'] }}</td>
+                        <td>{{ m['end'] }}</td>
+                        <td>{{ m['username'] }}</td>
+                        <td>{{ m['character'] }}</td>
+                        <td>{{ m['spec'] }}</td>
+                        <td>{{ m['keystone'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Keine Überschneidungen gefunden.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Eigene Einträge -->
+    <div class="own-box eintraege-box">
+        <h2>Deine Einträge</h2>
+        {% for own in own_entries %}
+            <div class="entry-line">
+                <span>{{ own['day'] }}: {{ own['start_time'] }}–{{ own['end_time'] }} | {{ own['spec'] }} | {{ own['keystone'] }}</span>
+                <form method="POST" action="/delete_entry/{{ own['id'] }}" style="display:inline;">
+                    <button type="submit" class="delete-x" title="Löschen">×</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Zeitvalidierung -->
+    <script>
+    document.getElementById('entry-form').addEventListener('submit', function(e) {
+        const start = document.querySelector('input[name="start_time"]').value;
+        const end = document.querySelector('input[name="end_time"]').value;
+        if (end <= start) {
+            alert("Ungültiges Zeitfenster: Endzeit darf nicht vor oder gleich Startzeit liegen.");
+            e.preventDefault();
+        }
+    });
+    </script>
+
+    <!-- Sortierfunktion -->
+    <script>
+    function sortTable(columnIndex) {
+        const table = document.querySelector(".sortable-table");
+        const rows = Array.from(table.rows).slice(1);
+        const isAsc = table.dataset.sortCol == columnIndex && table.dataset.sortDir === "asc";
+
+        rows.sort((a, b) => {
+            const valA = a.cells[columnIndex].innerText;
+            const valB = b.cells[columnIndex].innerText;
+            return (isAsc ? valB.localeCompare(valA) : valA.localeCompare(valB));
+        });
+
+        for (const row of rows) table.tBodies[0].appendChild(row);
+
+        table.dataset.sortCol = columnIndex;
+        table.dataset.sortDir = isAsc ? "desc" : "asc";
+    }
+    </script>
+</body>
+</html>
