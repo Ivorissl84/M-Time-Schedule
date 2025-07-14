@@ -1,4 +1,7 @@
 
+import os
+if not os.path.exists('database.db'):
+    import init_db
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from datetime import datetime, date, timedelta
