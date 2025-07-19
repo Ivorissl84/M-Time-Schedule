@@ -13,6 +13,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL').replace('postg
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+with app.app_context():
+    db.create_all()
+
 # ---------------- Datenbank-Modelle ----------------
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,9 +41,6 @@ class Entry(db.Model):
     created_date = db.Column(db.String, nullable=False)
 
 # ---------------- Hilfsfunktionen ----------------
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @app.before_request
 def cleanup_expired_entries():
