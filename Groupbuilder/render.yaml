@@ -1,0 +1,12 @@
+
+services:
+  - type: web
+    name: mplus-grouper
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        value: (deine PostgreSQL-URL)
