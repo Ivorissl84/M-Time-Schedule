@@ -1,2 +1,2 @@
 
-web: gunicorn Groupbuilder.app:app
+web: gunicorn app:app
